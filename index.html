@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07121f">
+<title>حضور المحاضرات - داخل الكلية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink9:#07121f;--ink8:#0b1b2e;--ink7:#10263f;--ink6:#183a5e;--g3:#e2c88f;--g4:#d4b06f;--g5:#c9a45c;--ok:#16a36a;--warn:#e0a021;--bad:#e5484d}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:#07121f}html,body{margin:0;min-height:100%;font-family:Cairo,system-ui,sans-serif;color:#10263f;background:#eef2f7}
+body{background:radial-gradient(1200px 500px at 50% -10%,#183a5e 0,#0b1b2e 55%,#07121f 100%) fixed;min-height:100vh}
+.wrap{max-width:560px;margin:0 auto;padding:18px 14px 40px}
+.wrap.wide{max-width:900px}
+.top{display:flex;align-items:center;gap:12px;color:#fff;padding:6px 4px 16px}
+.logo{width:46px;height:46px;border-radius:15px;background:linear-gradient(145deg,#e2c88f,#c9a45c);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px #0006;flex:none}
+.top h1{margin:0;font-size:19px;font-weight:800;line-height:1.25}
+.top p{margin:2px 0 0;font-size:11px;font-weight:700;color:var(--g4);letter-spacing:.12em}
+.card{background:#fff;border-radius:26px;padding:20px;box-shadow:0 20px 50px #0005;border-top:3px solid var(--g5);animation:up .3s ease-out}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+h2{margin:0 0 4px;font-size:22px;font-weight:800;color:var(--ink8)}
+.sub{margin:0 0 14px;color:#5b6b80;font-size:14px;font-weight:600;line-height:1.7}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:0;border-radius:16px;padding:14px 16px;font:800 16px Cairo;cursor:pointer;transition:transform .08s,filter .15s;min-height:52px}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.55}
+.btn-p{background:linear-gradient(145deg,#183a5e,#07121f);color:#f3dfae;box-shadow:0 8px 20px #07121f55}
+.btn-g{background:linear-gradient(145deg,#e8d4a0,#c9a45c);color:#07121f}
+.btn-l{background:#eef2f7;color:var(--ink7)}
+.btn-ok{background:var(--ok);color:#fff}.btn-bad{background:var(--bad);color:#fff}
+.btn-s{width:auto;min-height:40px;padding:8px 14px;font-size:14px;border-radius:12px}
+.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1 1 auto}
+.chip{border:2px solid #dbe3ee;background:#fff;border-radius:14px;padding:10px 16px;font:800 15px Cairo;color:var(--ink7);cursor:pointer;min-height:44px}
+.chip.on{background:var(--ink8);border-color:var(--g5);color:#f3dfae}
+.sess{display:block;width:100%;text-align:right;border:2px solid #e5ebf3;background:#fff;border-radius:18px;padding:14px;margin:0 0 10px;cursor:pointer;font-family:Cairo}
+.sess b{display:block;font-size:17px;color:var(--ink8)}.sess span{font-size:13px;color:#5b6b80;font-weight:600}
+.sess:active{border-color:var(--g5)}
+.inp{width:100%;border:2px solid #dbe3ee;background:#f7f9fc;border-radius:16px;padding:13px 15px;font:700 16px Cairo;color:var(--ink8);outline:none;min-height:52px}
+.inp:focus{border-color:var(--g5);background:#fff;box-shadow:0 0 0 4px #c9a45c33}
+.names{max-height:48vh;overflow:auto;margin-top:10px;border-radius:16px}
+.nm{display:block;width:100%;text-align:right;border:0;border-bottom:1px solid #edf1f6;background:#fff;padding:13px 12px;font:700 16px Cairo;color:var(--ink8);cursor:pointer}
+.nm:active{background:#f7efd9}
+.pill{display:inline-block;border-radius:99px;padding:3px 12px;font-size:12px;font-weight:800}
+.pill.in{background:#d9f5e8;color:#0a6b43}.pill.out{background:#fdf0cf;color:#8a5a00}.pill.none{background:#e9edf3;color:#5b6b80}
+.pill.fix{background:#e3dcff;color:#4b36a0;margin-inline-start:6px}
+.big{width:96px;height:96px;border-radius:50%;margin:6px auto 12px;display:flex;align-items:center;justify-content:center}
+.center{text-align:center}
+.ring{width:70px;height:70px;border-radius:50%;border:6px solid #e5ebf3;border-top-color:var(--g5);margin:10px auto 14px;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.note{background:#f7efd9;border-radius:14px;padding:11px 13px;font-size:13px;font-weight:700;color:#6b5217;line-height:1.7;margin-top:12px}
+.err{background:#fde4e4;color:#8f1d22}
+.steps{margin:10px 0 0;padding:0 18px 0 0;font-size:14px;font-weight:600;color:#33445a;line-height:1.9}
+.modal{position:fixed;inset:0;background:#07121fb0;backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+.modal .card{width:100%;max-width:420px}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.sum div{border-radius:16px;padding:10px 4px;text-align:center;font-weight:800;font-size:12px}
+.sum b{display:block;font-size:26px;line-height:1.1}
+.tr{display:flex;align-items:center;gap:8px;padding:10px 4px;border-bottom:1px solid #edf1f6}
+.tr{flex-wrap:wrap}.tr .n{flex:1 1 150px;font-weight:800;font-size:15px;color:var(--ink8);min-width:0}
+@media(max-width:520px){.tr .n{flex-basis:100%}}
+.tr .n small{display:block;font-size:11px;color:#7a8799;font-weight:600}
+.ix{font:800 12px Cairo;border:2px solid #dbe3ee;background:#fff;border-radius:10px;padding:6px 10px;cursor:pointer;color:var(--ink7)}
+.ix.on{background:var(--ink8);color:#f3dfae;border-color:var(--ink8)}
+.hint{font-size:12px;color:#7a8799;font-weight:600}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#07121f;color:#f3dfae;padding:12px 20px;border-radius:99px;font-weight:800;z-index:99;box-shadow:0 10px 30px #0008}
+.sp{height:10px}
+</style>
+</head>
+<body>
+<div class="wrap" id="wrap">
+  <div class="top">
+    <div class="logo"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#07121f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><path d="M9 10l2 2 4-4"/></svg></div>
+    <div><h1 id="ttl">حضور المحاضرات داخل الكلية</h1><p>كلية التمريض · جامعة بورسعيد</p></div>
+  </div>
+  <div id="app"></div>
+</div>
+<script>
+'use strict';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyi95aSwaUA2cuQeACI1GLAbhmhbHmm_zhze6FubrrFfMLDJUoZirqV8SKIJ42r9dAR/exec';
+const GROUPS = [
+  { id: 'فرقة 1', url: 'https://script.google.com/macros/s/AKfycbx1otQoRprzJfcsQwu50E82sKwsquIXY8Ec3Te8zERcNJy2ZpyABYyTWyts2HFEDndg/exec' },
+  { id: 'فرقة 2', url: 'https://script.google.com/macros/s/AKfycbz-ufQ1lkZerVEUjMq0bEPx3YHf9MP4x474g0zi5YoOagIEq34uneMZ-fkgGDafZpLyjQ/exec' },
+  { id: 'فرقة 3', url: 'https://script.google.com/macros/s/AKfycbwGmOLnv7L2kqgCd4jGC8esF9wh2WgiOxKgXjfE04IpLjNmK6c2KFTJeTPqEOrH5V33/exec' },
+  { id: 'فرقة 4', url: 'https://script.google.com/macros/s/AKfycbwCux9kz_6J8VJK_9t0z7ctuVwTy2PjGyi0-bUJ0hDUMj5WJyoQ0yuw__ynODtOt0uDng/exec' }
+];
+const IS_ADMIN = new URLSearchParams(location.search).get('admin') === '1';
+const $ = s => document.querySelector(s), app = $('#app');
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const norm = s => String(s || '').replace(/[\u064B-\u065F\u0670]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/\s+/g, ' ').trim();
+let devId = ''; try { devId = localStorage.getItem('off_dev') || ''; if (!devId) { devId = 'd' + Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem('off_dev', devId); } } catch (e) { devId = 'd' + Math.random().toString(36).slice(2); }
+let adminKey = ''; try { adminKey = localStorage.getItem('off_admin_key') || ''; } catch (e) {}
+
+async function post(url, body, ms = 30000) {
+  const c = new AbortController(), t = setTimeout(() => c.abort(), ms);
+  try {
+    const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body), signal: c.signal });
+    return await r.json();
+  } finally { clearTimeout(t); }
+}
+async function api(body, tries = 3) {
+  if (IS_ADMIN && adminKey) body = { ...body, adminKey };
+  let last;
+  for (let i = 0; i < tries; i++) {
+    try {
+      const j = await post(API_URL, body);
+      if (j.error === 'server_busy' && i < tries - 1) { await sleep(900 * (i + 1)); continue; }
+      return j;
+    } catch (e) { last = e; await sleep(700 * (i + 1)); }
+  }
+  throw last || new Error('network');
+}
+const rosterCache = {}, courseCache = {};
+async function getRoster(g) {
+  if (rosterCache[g]) return rosterCache[g];
+  const u = GROUPS.find(x => x.id === g).url;
+  for (let i = 0; i < 4; i++) { try { const j = await post(u, { action: 'roster', sid: '' }); if (j.ok && Array.isArray(j.names)) return (rosterCache[g] = j.names); } catch (e) {} await sleep(800 * (i + 1)); }
+  throw new Error('roster');
+}
+async function getCourses(g) {
+  if (courseCache[g]) return courseCache[g];
+  const u = GROUPS.find(x => x.id === g).url;
+  for (let i = 0; i < 4; i++) { try { const j = await post(u, { action: 'courses' }); if (j.ok && Array.isArray(j.courses)) return (courseCache[g] = j.courses); } catch (e) {} await sleep(800 * (i + 1)); }
+  throw new Error('courses');
+}
+function toast(m) { const t = document.createElement('div'); t.className = 'toast'; t.textContent = m; document.body.appendChild(t); setTimeout(() => t.remove(), 2400); }
+function cairoDate() { try { return new Date().toLocaleDateString('ar-EG', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Africa/Cairo' }); } catch (e) { return new Date().toLocaleDateString('ar-EG'); } }
+function hm(ms) { try { return new Date(+ms).toLocaleTimeString('ar-EG', { hour: 'numeric', minute: '2-digit', timeZone: 'Africa/Cairo' }); } catch (e) { return ''; } }
+const ICON = {
+  ok: '<div class="big" style="background:#d9f5e8"><svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#0a6b43" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></div>',
+  out: '<div class="big" style="background:#fdf0cf"><svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#8a5a00" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><path d="M10 8l4 4M14 8l-4 4"/></svg></div>',
+  no: '<div class="big" style="background:#fde4e4"><svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#b3262b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M5.7 5.7l12.6 12.6"/></svg></div>'
+};
+
+/* ================= الطالب ================= */
+let S = { sessions: [], ses: null, names: [], name: '' };
+
+async function stuHome() {
+  app.innerHTML = '<div class="card center"><div class="ring"></div><h2>جاري التحميل...</h2></div>';
+  let j;
+  try { j = await api({ action: 'sessions' }); } catch (e) { return stuErr('مفيش اتصال بالسيرفر', 'اتأكد من النت وجرب تاني', stuHome); }
+  if (!j.ok) return stuErr('حصلت مشكلة', j.error || '', stuHome);
+  S.sessions = j.sessions || [];
+  if (!S.sessions.length) {
+    app.innerHTML = '<div class="card center">' + ICON.no + '<h2>مفيش محاضرة مفتوحة دلوقتي</h2><p class="sub">التسجيل بيفتح لما الدكتور أو المسؤول يبدأ المحاضرة. حاول تاني بعد لحظات.</p><button class="btn btn-p" id="rf">تحديث</button></div>';
+    $('#rf').onclick = stuHome; return;
+  }
+  if (S.sessions.length === 1) return pickSession(S.sessions[0]);
+  app.innerHTML = '<div class="card"><h2>اختار محاضرتك</h2><p class="sub">دوس على المحاضرة اللي إنت فيها دلوقتي</p>' +
+    S.sessions.map((s, i) => '<button class="sess" data-i="' + i + '"><b>' + esc(s.course) + '</b><span>' + esc(s.grp) + (s.doctor ? ' · ' + esc(s.doctor) : '') + ' · مفتوحة لحد ' + hm(s.closeAtMs) + '</span></button>').join('') + '</div>';
+  app.querySelectorAll('.sess').forEach(b => b.onclick = () => pickSession(S.sessions[+b.dataset.i]));
+}
+function stuErr(t, m, retry) {
+  app.innerHTML = '<div class="card center">' + ICON.no + '<h2>' + esc(t) + '</h2><p class="sub">' + esc(m) + '</p><button class="btn btn-p" id="rt">حاول تاني</button></div>';
+  $('#rt').onclick = retry;
+}
+async function pickSession(s) {
+  S.ses = s; S.name = '';
+  app.innerHTML = '<div class="card center"><div class="ring"></div><h2>جاري تحميل الأسماء...</h2></div>';
+  try { S.names = await getRoster(s.grp); } catch (e) { return stuErr('تعذر تحميل الأسماء', 'اتأكد من النت وجرب تاني', () => pickSession(s)); }
+  stuNames();
+}
+function stuNames() {
+  const s = S.ses;
+  app.innerHTML = '<div class="card"><h2>' + esc(s.course) + '</h2><p class="sub">' + esc(s.grp) + ' · اكتب جزء من اسمك أو دوّر في القايمة، وبعدين دوس على اسمك</p>' +
+    '<input id="q" class="inp" placeholder="ابحث عن اسمك" autocomplete="off"><div class="names" id="nl"></div></div>';
+  const draw = () => {
+    const q = norm($('#q').value), l = (q ? S.names.filter(n => norm(n).includes(q)) : S.names).slice(0, 80);
+    $('#nl').innerHTML = l.length ? l.map(n => '<button class="nm" data-n="' + esc(n) + '">' + esc(n) + '</button>').join('') : '<p class="sub center" style="padding:16px">مفيش اسم بالشكل ده</p>';
+    $('#nl').querySelectorAll('.nm').forEach(b => b.onclick = () => confirmName(b.dataset.n));
+  };
+  $('#q').oninput = draw; draw();
+}
+function confirmName(n) {
+  const m = document.createElement('div'); m.className = 'modal';
+  m.innerHTML = '<div class="card center"><h2>إنت ' + esc(n) + '؟</h2><p class="sub">هنسجل حضورك ونتأكد إنك جوه الكلية. هيطلب منك إذن اللوكيشن، دوس "سماح".</p><div class="row"><button class="btn btn-g" id="y">أيوه، سجّلني</button><button class="btn btn-l" id="x">لا، رجوع</button></div></div>';
+  document.body.appendChild(m);
+  $('#x').onclick = () => m.remove();
+  $('#y').onclick = () => { m.remove(); S.name = n; locate(); };
+}
+function getFix(onProg) {
+  return new Promise((res, rej) => {
+    if (!navigator.geolocation) return rej({ code: 99 });
+    let best = null, done = false, wid, tm;
+    const fin = (ok, v) => { if (done) return; done = true; try { navigator.geolocation.clearWatch(wid); } catch (e) {} clearTimeout(tm); ok ? res(v) : rej(v); };
+    wid = navigator.geolocation.watchPosition(p => {
+      const f = { lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy || 9999 };
+      if (!best || f.acc < best.acc) best = f;
+      onProg && onProg(best.acc);
+      if (best.acc <= 35) fin(true, best);
+    }, err => { if (err.code === 1) fin(false, { code: 1 }); else if (!best) { /* استنى للنهاية */ } }, { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 });
+    tm = setTimeout(() => best ? fin(true, best) : fin(false, { code: 3 }), 16000);
+  });
+}
+async function locate() {
+  app.innerHTML = '<div class="card center"><div class="ring"></div><h2>بنحدد مكانك...</h2><p class="sub" id="lp">استنى ثواني وإنت واقف في مكان مفتوح لو أمكن</p></div>';
+  let fix;
+  try { fix = await getFix(a => { const e = $('#lp'); if (e) e.textContent = 'دقة الـGPS الحالية: حوالي ' + Math.round(a) + ' متر'; }); }
+  catch (e) { return locErr(e.code); }
+  app.innerHTML = '<div class="card center"><div class="ring"></div><h2>بنسجل حضورك...</h2></div>';
+  let j;
+  try { j = await api({ action: 'register', sessionId: S.ses.id, name: S.name, lat: fix.lat, lng: fix.lng, acc: fix.acc, deviceId: devId }); }
+  catch (e) { return stuErr('مفيش اتصال بالسيرفر', 'حضورك لسه ماتسجلش. اتأكد من النت وجرب تاني', locate); }
+  result(j, fix);
+}
+function locErr(code) {
+  let t, steps;
+  if (code === 1) { t = 'لازم تسمح بالوصول للوكيشن'; steps = ['أندرويد: دوس على القفل جنب الرابط > الأذونات > الموقع > سماح', 'آيفون: الإعدادات > الخصوصية > خدمات الموقع > Safari > أثناء الاستخدام', 'بعدها ارجع هنا ودوس "جرب تاني"']; }
+  else if (code === 99) { t = 'متصفحك مش بيدعم تحديد الموقع'; steps = ['افتح الرابط من Chrome أو Safari']; }
+  else { t = 'مش قادرين نحدد مكانك'; steps = ['شغّل الـGPS (الموقع) في الموبايل', 'اقف في مكان مفتوح أو جنب شباك', 'دوس "جرب تاني"']; }
+  app.innerHTML = '<div class="card">' + ICON.no + '<h2 class="center">' + t + '</h2><p class="sub center">التسجيل مش بيتم من غير اللوكيشن، عشان نعرف إنك فعلا في الكلية.</p><ol class="steps">' + steps.map(s => '<li>' + s + '</li>').join('') + '</ol><div class="sp"></div><div class="sp"></div><button class="btn btn-p" id="rt">جرب تاني</button></div>';
+  $('#rt').onclick = locate;
+}
+function result(j, fix) {
+  if (j.ok && j.status === 'in') {
+    app.innerHTML = '<div class="card center">' + ICON.ok + '<h2>اتسجل حضورك</h2><p class="sub">' + esc(S.name) + '<br>تم تأكيد وجودك داخل الكلية. تقدر تقفل الصفحة.</p></div>'; return;
+  }
+  if (j.ok && j.status === 'out') {
+    app.innerHTML = '<div class="card center">' + ICON.out + '<h2>اتسجل حضورك، بس برا نطاق الكلية</h2><p class="sub">' + esc(S.name) + '<br>الموقع اللي ظهر بعيد عن الكلية حوالي ' + (j.dist || 0) + ' متر. لو إنت فعلا جوه الكلية، ممكن الـGPS غلط. اقف في مكان مفتوح وجرب تاني، أو كلّم المسؤول يصحّح حالتك.</p>' +
+      '<button class="btn btn-g" id="rt">أنا جوه الكلية، جرب تاني</button></div>';
+    $('#rt').onclick = locate; return;
+  }
+  const E = {
+    closed: ['التسجيل اتقفل', 'المحاضرة دي مبقاش فيها تسجيل'], duplicate: ['الاسم ده اتسجل قبل كده', 'لو ده اسمك كلّم المسؤول'],
+    device_used: ['الموبايل ده سجّل بإسم تاني', 'كل موبايل بيسجل لشخص واحد بس في المحاضرة'], invalid_name: ['الاسم مش صحيح', 'اختار اسمك من القايمة'],
+    not_found: ['المحاضرة مش موجودة', 'ارجع للصفحة الرئيسية وجرب تاني'], no_location: ['الموقع مش واصل', 'شغّل الـGPS وجرب تاني']
+  };
+  if (j.error === 'low_accuracy') {
+    app.innerHTML = '<div class="card center">' + ICON.out + '<h2>دقة الـGPS ضعيفة</h2><p class="sub">الدقة الحالية حوالي ' + (j.acc || '?') + ' متر، والمطلوب أقل من ' + (j.maxAcc || 100) + ' متر. اقف في مكان مفتوح أو جنب شباك، شغّل الموقع بدقة عالية، وجرب تاني. ماحدش اتحسب برا بسبب ده.</p><button class="btn btn-p" id="rt">جرب تاني</button></div>';
+    $('#rt').onclick = locate; return;
+  }
+  const e = E[j.error] || ['حصلت مشكلة', j.error || ''];
+  app.innerHTML = '<div class="card center">' + ICON.no + '<h2>' + e[0] + '</h2><p class="sub">' + e[1] + '</p><button class="btn btn-p" id="hm">رجوع</button></div>';
+  $('#hm').onclick = stuHome;
+}
+
+/* ================= الأدمن ================= */
+let A = { sessions: [], cfg: {}, grp: '', course: '', mins: 60, tab: 'all', rep: null, filter: 'all' };
+
+function askKey(msg) {
+  return new Promise(res => {
+    const m = document.createElement('div'); m.className = 'modal';
+    m.innerHTML = '<div class="card center"><h2>دخول الأدمن</h2><p class="sub">' + (msg || 'اكتب كلمة السر') + '</p><input id="pk" type="password" class="inp" autocomplete="current-password"><div class="sp"></div><button class="btn btn-p" id="pg">دخول</button></div>';
+    document.body.appendChild(m);
+    const go = () => { const v = $('#pk').value.trim(); if (v) { m.remove(); res(v); } };
+    $('#pg').onclick = go; $('#pk').onkeydown = e => { if (e.key === 'Enter') go(); }; setTimeout(() => $('#pk').focus(), 100);
+  });
+}
+async function adminStart() {
+  $('#wrap').classList.add('wide'); $('#ttl').textContent = 'لوحة الحضور داخل الكلية';
+  app.innerHTML = '<div class="card center"><div class="ring"></div></div>';
+  let msg = '';
+  for (let i = 0; i < 6; i++) {
+    if (!adminKey) { adminKey = await askKey(msg); }
+    let j; try { j = await api({ action: 'adminCheck' }); } catch (e) { return stuErr('مفيش اتصال بالسيرفر', '', adminStart); }
+    if (j.ok) { try { localStorage.setItem('off_admin_key', adminKey); } catch (e) {} return adminHome(); }
+    adminKey = ''; try { localStorage.removeItem('off_admin_key'); } catch (e) {} msg = 'كلمة السر غلط، حاول تاني';
+  }
+}
+async function adminHome() {
+  const j = await api({ action: 'adminSessions' }).catch(() => null);
+  if (!j || !j.ok) { return stuErr('تعذر التحميل', '', adminHome); }
+  A.sessions = j.sessions; A.cfg = j.cfg; A.now = j.now;
+  const link = location.origin + location.pathname;
+  app.innerHTML =
+    '<div class="card"><h2>افتح محاضرة أوفلاين</h2><p class="sub">اختار الفرقة والمادة والمدة بالأزرار</p>' +
+    '<div class="row" id="gr">' + GROUPS.map(g => '<button class="chip' + (A.grp === g.id ? ' on' : '') + '" data-g="' + g.id + '">' + g.id + '</button>').join('') + '</div>' +
+    '<div class="sp"></div><div class="row" id="cr"></div><div class="sp"></div>' +
+    '<div class="row" id="mr">' + [30, 60, 120].map(m => '<button class="chip' + (A.mins === m ? ' on' : '') + '" data-m="' + m + '">' + (m === 60 ? 'ساعة' : m === 120 ? 'ساعتين' : 'نص ساعة') + '</button>').join('') + '</div>' +
+    '<div class="sp"></div><button class="btn btn-g" id="op">افتح التسجيل</button></div>' +
+    '<div class="sp"></div><div class="sp"></div>' +
+    '<div class="card"><h2>رابط الطلاب</h2><p class="sub" dir="ltr" style="text-align:left;word-break:break-all">' + esc(link) + '</p><div class="row"><button class="btn btn-p btn-s" id="cp">نسخ الرابط</button><button class="btn btn-l btn-s" id="qb">عرض QR</button></div><div id="qr" class="center" style="margin-top:12px"></div></div>' +
+    '<div class="sp"></div><div class="sp"></div>' +
+    '<div class="card"><h2>المحاضرات</h2><p class="sub">آخر المحاضرات الأوفلاين</p><div id="sl"></div></div>' +
+    '<div class="sp"></div><div class="sp"></div>' +
+    '<div class="card"><h2>نطاق الكلية</h2><p class="sub">النطاق الحالي: <b>' + A.cfg.radius + ' متر</b> حوالين نقطة الكلية. الدقة المسموحة: ' + A.cfg.maxAcc + ' متر.</p><div class="row"><button class="btn btn-l btn-s" data-r="-50">أقل 50 متر</button><button class="btn btn-l btn-s" data-r="50">أكتر 50 متر</button></div></div>';
+  document.querySelectorAll('#gr .chip').forEach(b => b.onclick = () => { A.grp = b.dataset.g; A.course = ''; adminHomeDraw(); });
+  document.querySelectorAll('#mr .chip').forEach(b => b.onclick = () => { A.mins = +b.dataset.m; document.querySelectorAll('#mr .chip').forEach(x => x.classList.toggle('on', x === b)); });
+  $('#op').onclick = openSes;
+  $('#cp').onclick = () => { try { navigator.clipboard.writeText(link); toast('اتنسخ الرابط'); } catch (e) { toast('انسخه يدوي'); } };
+  $('#qb').onclick = () => showQR(link);
+  document.querySelectorAll('[data-r]').forEach(b => b.onclick = async () => { const r = Math.max(50, A.cfg.radius + +b.dataset.r); const x = await api({ action: 'setRadius', radius: r }); if (x.ok) { toast('النطاق ' + x.radius + ' متر'); adminHome(); } });
+  drawSessions(); adminHomeDraw(true);
+}
+function drawSessions() {
+  const el = $('#sl');
+  if (!A.sessions.length) { el.innerHTML = '<p class="hint">مفيش محاضرات لسه</p>'; return; }
+  el.innerHTML = A.sessions.map(s => '<div class="tr"><div class="n">' + esc(s.course) + '<small>' + esc(s.grp) + ' · ' + esc(s.dateText || '') + ' · ' + (s.open ? 'مفتوحة لحد ' + hm(s.closeAtMs) : 'مقفولة') + '</small></div>' +
+    '<span class="pill in">' + s.counts.in + ' كلية</span><span class="pill out">' + s.counts.out + ' برا</span>' +
+    '<button class="ix" data-rep="' + s.id + '">تقرير</button>' + (s.open ? '<button class="ix" data-cl="' + s.id + '">قفل</button>' : '') + '</div>').join('');
+  el.querySelectorAll('[data-rep]').forEach(b => b.onclick = () => report(b.dataset.rep));
+  el.querySelectorAll('[data-cl]').forEach(b => b.onclick = async () => { b.disabled = true; await api({ action: 'closeSession', sessionId: b.dataset.cl }); toast('اتقفلت'); adminHome(); });
+}
+async function adminHomeDraw(keep) {
+  document.querySelectorAll('#gr .chip').forEach(b => b.classList.toggle('on', b.dataset.g === A.grp));
+  const cr = $('#cr'); if (!A.grp) { cr.innerHTML = '<span class="hint">اختار الفرقة الأول</span>'; return; }
+  cr.innerHTML = '<span class="hint">جاري تحميل المواد...</span>';
+  try {
+    const cs = await getCourses(A.grp);
+    if (A.grp !== (document.querySelector('#gr .chip.on') || {}).dataset?.g) return;
+    cr.innerHTML = cs.map(c => '<button class="chip' + (A.course === c.name ? ' on' : '') + '" data-c="' + esc(c.name) + '">' + esc(c.name) + '</button>').join('') || '<span class="hint">مفيش مواد</span>';
+    cr.querySelectorAll('.chip').forEach(b => b.onclick = () => { A.course = b.dataset.c; cr.querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x === b)); });
+  } catch (e) { cr.innerHTML = '<span class="hint">تعذر تحميل المواد</span>'; }
+}
+async function openSes() {
+  if (!A.grp || !A.course) { toast('اختار الفرقة والمادة'); return; }
+  const b = $('#op'); b.disabled = true;
+  const j = await api({ action: 'openSession', grp: A.grp, course: A.course, mins: A.mins, dateText: cairoDate() }).catch(() => null);
+  b.disabled = false;
+  if (!j || !j.ok) { toast('حصلت مشكلة'); return; }
+  toast('اتفتح التسجيل'); adminHome();
+}
+function showQR(link) {
+  const box = $('#qr'); box.innerHTML = '<div class="hint">جاري التحميل...</div>';
+  const draw = () => { box.innerHTML = ''; new QRCode(box, { text: link, width: 220, height: 220, colorDark: '#07121f', colorLight: '#ffffff' }); };
+  if (window.QRCode) return draw();
+  const s = document.createElement('script'); s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'; s.onload = draw; s.onerror = () => box.textContent = 'تعذر تحميل الـQR'; document.head.appendChild(s);
+}
+async function report(id) {
+  app.innerHTML = '<div class="card center"><div class="ring"></div><h2>جاري تحميل التقرير...</h2></div>';
+  const j = await api({ action: 'report', sessionId: id }).catch(() => null);
+  if (!j || !j.ok) return stuErr('تعذر تحميل التقرير', '', () => report(id));
+  let names; try { names = await getRoster(j.session.grp); } catch (e) { names = []; }
+  A.rep = { id, ses: j.session, recs: j.records, ovs: j.overrides, names, cfg: j.cfg }; A.filter = 'all'; drawReport();
+}
+function rows_() {
+  const R = A.rep, rec = {}, ov = {};
+  R.recs.forEach(r => rec[r.name] = r);
+  R.ovs.forEach(o => { ov[o.name] = o; }); // آخر تصحيح بيغلب (الصفوف بالترتيب)
+  const all = R.names.slice(); Object.keys(rec).forEach(n => { if (all.indexOf(n) < 0) all.push(n); });
+  return all.map(n => {
+    const r = rec[n], o = ov[n]; let st = r ? r.status : 'none', fixed = false;
+    if (o && o.status) { st = o.status; fixed = true; }
+    return { n, st, fixed, r, auto: r ? r.status : 'none' };
+  });
+}
+function drawReport() {
+  const R = A.rep, rows = rows_(), c = { in: 0, out: 0, none: 0 };
+  rows.forEach(x => c[x.st]++);
+  const list = rows.filter(x => A.filter === 'all' || x.st === A.filter).sort((a, b) => ({ in: 0, out: 1, none: 2 }[a.st] - { in: 0, out: 1, none: 2 }[b.st]) || a.n.localeCompare(b.n, 'ar'));
+  app.innerHTML = '<div class="card"><div class="row" style="align-items:center"><div style="flex:3"><h2>' + esc(R.ses.course) + '</h2><p class="sub" style="margin:0">' + esc(R.ses.grp) + ' · ' + esc(R.ses.dateText || '') + '</p></div><button class="btn btn-l btn-s" id="bk" style="flex:1">رجوع</button></div>' +
+    '<div class="sum"><div style="background:#d9f5e8;color:#0a6b43"><b>' + c.in + '</b>من الكلية</div><div style="background:#fdf0cf;color:#8a5a00"><b>' + c.out + '</b>من برا</div><div style="background:#e9edf3;color:#5b6b80"><b>' + c.none + '</b>ما سجلش</div></div>' +
+    '<div class="row" id="tb">' + [['all', 'الكل'], ['in', 'من الكلية'], ['out', 'من برا'], ['none', 'ما سجلش']].map(t => '<button class="chip' + (A.filter === t[0] ? ' on' : '') + '" data-f="' + t[0] + '">' + t[1] + '</button>').join('') + '</div>' +
+    '<div class="sp"></div><div id="rl">' + (list.map((x, i) => '<div class="tr"><div class="n">' + esc(x.n) + '<small>' + (x.r ? 'المسافة ' + x.r.dist + ' م · دقة ' + Math.round(+x.r.acc) + ' م' : 'لسه ماسجلش') + '</small></div>' +
+      '<span class="pill ' + x.st + '">' + ({ in: 'من الكلية', out: 'من برا', none: 'ما سجلش' }[x.st]) + '</span>' + (x.fixed ? '<span class="pill fix">تصحيح</span>' : '') +
+      '<button class="ix' + (x.st === 'in' ? ' on' : '') + '" data-s="in" data-i="' + i + '">كلية</button><button class="ix' + (x.st === 'out' ? ' on' : '') + '" data-s="out" data-i="' + i + '">برا</button>' + (x.fixed ? '<button class="ix" data-s="" data-i="' + i + '">↩</button>' : '') + '</div>').join('') || '<p class="hint">مفيش حد هنا</p>') + '</div>' +
+    '<div class="sp"></div><button class="btn btn-p" id="ex">تنزيل التقرير (CSV)</button></div>';
+  $('#bk').onclick = adminHome;
+  document.querySelectorAll('#tb .chip').forEach(b => b.onclick = () => { A.filter = b.dataset.f; drawReport(); });
+  document.querySelectorAll('#rl .ix').forEach(b => b.onclick = async () => {
+    const x = list[+b.dataset.i]; b.disabled = true;
+    const j = await api({ action: 'setOverride', sessionId: R.id, name: x.n, status: b.dataset.s }).catch(() => null);
+    if (!j || !j.ok) { toast('حصلت مشكلة'); b.disabled = false; return; }
+    R.ovs.push({ sessionId: R.id, name: x.n, status: b.dataset.s, ts: Date.now() }); drawReport();
+  });
+  $('#ex').onclick = () => {
+    const L = ['الاسم,الحالة,تصحيح الأدمن,المسافة (م),الدقة (م)'].concat(rows.map(x => [x.n, { in: 'من الكلية', out: 'من برا', none: 'ما سجلش' }[x.st], x.fixed ? 'نعم' : '', x.r ? x.r.dist : '', x.r ? Math.round(+x.r.acc) : ''].map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')));
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + L.join('\n')], { type: 'text/csv;charset=utf-8' })); a.download = 'حضور-اوفلاين-' + R.ses.grp + '.csv'; a.click();
+  };
+}
+
+IS_ADMIN ? adminStart() : stuHome();
+</script>
+</body>
+</html>

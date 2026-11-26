@@ -364,6 +364,17 @@ function renderStudentView() {
   if (s.doctor) { docEl.textContent = dr(s.doctor); docEl.classList.remove('hidden'); } else docEl.classList.add('hidden');
   document.title = `تسجيل حضور - ${s.courseName}`;
   const saved = getSaved(s.id);
+  if (saved && saved.outside) {
+    let oc = document.getElementById('student-outside-card');
+    if (!oc) { oc = document.createElement('div'); oc.id = 'student-outside-card'; receipt.parentNode.insertBefore(oc, receipt.nextSibling); }
+    oc.className = 'fade-in';
+    oc.innerHTML = '<div class="ticket shadow-[0_20px_60px_-15px_rgba(7,18,31,.3)] overflow-hidden"><div class="goldbar"></div><div class="p-7 text-center">'
+      + '<svg viewBox="0 0 72 72" class="w-24 h-24 mx-auto mb-3" fill="none"><circle cx="36" cy="36" r="30" stroke="#b42318" stroke-width="2.5"/><path d="M36 20c-7 0-12 5-12 12 0 9 12 20 12 20s12-11 12-20c0-7-5-12-12-12z" stroke="#b42318" stroke-width="3.5" stroke-linejoin="round"/><circle cx="36" cy="32" r="4.5" stroke="#b42318" stroke-width="3.5"/></svg>'
+      + '<h2 class="font-display text-3xl font-bold" style="color:#9b1c1c">انت برا الكلية دلوقتي</h2>'
+      + '<p class="text-sm text-slate-600 mt-3 leading-7">موقعك الحالي بعيد عن الكلية' + (saved.dist ? ' (حوالي ' + saved.dist + ' متر)' : '') + '. لو انت جوه الكلية فعلا كلّم المسؤول.</p></div></div>';
+    oc.classList.remove('hidden'); return;
+  }
+  { const oc = document.getElementById('student-outside-card'); if (oc) oc.classList.add('hidden'); }
   if (saved) {
     $('receipt-badge-text').textContent = 'إيصال تسجيل';
     $('receipt-name').textContent = saved.studentName;
@@ -372,7 +383,6 @@ function renderStudentView() {
     $('receipt-doctor-row').classList.toggle('hidden', !s.doctor);
     $('receipt-date').textContent = s.sessionDate;
     $('receipt-time').textContent = fmtTime(saved.timestamp);
-    { let n = document.getElementById('receipt-out-note'); if (!n) { n = document.createElement('div'); n.id = 'receipt-out-note'; n.className = 'text-center text-sm font-bold rounded-2xl p-3 mt-4'; n.style.cssText = 'background:#fdecec;color:#9b1c1c'; $('receipt-time').closest('.space-y-3,div').parentNode.appendChild(n); } n.textContent = 'تم تسجيل حضورك، بس انت برا الكلية' + (saved.dist ? ' (حوالي ' + saved.dist + ' متر)' : '') + '. المسؤول هيشوف حالتك.'; n.classList.toggle('hidden', !saved.outside); }
     receipt.classList.remove('hidden'); return;
   }
   if (s.isOpen === false) {
@@ -501,10 +511,9 @@ $('attendance-form').addEventListener('submit', async e => {
     const fix = await getFix();
     submitText.textContent = 'جاري حفظ الحضور...';
     const res = await submitWithRetry({ action: 'addRecord', sessionId: s.id, rosterIdx: pickedIdx, studentName: name, deviceId: getDeviceId(), lat: fix.lat, lng: fix.lng, acc: fix.acc, ...(tokenParam ? { token: tokenParam } : {}) });
-    hideLocHelp();
     const outside = !!(res && res.status === 'out');
     saveReg(s.id, { studentName: name, rosterIdx: pickedIdx, timestamp: new Date().toISOString(), outside, dist: res && res.dist });
-    showToast(outside ? 'تم تسجيل حضورك، بس انت برا الكلية' : 'تم تسجيل حضورك بنجاح', outside ? 'info' : undefined);
+    showToast(outside ? 'انت برا الكلية دلوقتي' : 'تم تسجيل حضورك بنجاح', outside ? 'info' : undefined);
     renderStudentView();
   } catch (err) {
     const m = { duplicate: 'الاسم ده اتسجل قبل كدا!', closed: 'التسجيل مغلق لهذه المحاضرة.', invalid_name: 'الكشف اتحدّث، اختار اسمك تاني.',
@@ -514,7 +523,6 @@ $('attendance-form').addEventListener('submit', async e => {
       token_used: 'الرابط ده اتستخدم قبل كده.', invalid_token: 'الرابط غير صحيح، اطلب رابط جديد من البوت.', token_required: 'التسجيل من بوت التليجرام فقط.' };
     if (err.message === 'closed') { activeStudentSession = { ...s, isOpen: false }; renderStudentView(); }
     if (err.message === 'duplicate' || err.message === 'invalid_name') loadRoster().catch(() => {});
-    hideLocHelp();
     showToast(m[err.message] || 'حدث خطأ أثناء التسجيل، حاول مرة أخرى.', 'error');
   } finally {
     submitBtn.disabled = false; submitText.textContent = 'تأكيد وتسجيل الحضور';

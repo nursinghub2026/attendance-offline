@@ -450,13 +450,37 @@ $('name-list').addEventListener('click', e => {
 
 // ===== تشيك الموقع (أوفلاين) =====
 function getFix() {
-  return new Promise((resolve, reject) => {
-    if (!navigator.geolocation) return reject(new Error('geo_unavailable'));
-    navigator.geolocation.getCurrentPosition(
-      p => resolve({ lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy }),
-      e => reject(new Error(e.code === 1 ? 'geo_denied' : e.code === 3 ? 'geo_timeout' : 'geo_unavailable')),
-      { enableHighAccuracy: true, timeout: 25000, maximumAge: 0 });
+  const MAXA = 100, TRIES = 4;
+  const once = () => new Promise((res, rej) => {
+    if (!navigator.geolocation) return rej({ code: 2 });
+    navigator.geolocation.getCurrentPosition(p => res({ lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy }), e => rej(e), { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 });
   });
+  return (async () => {
+    let best = null, denied = 0, lastErr = 'geo_unavailable';
+    for (let t = 1; t <= TRIES; t++) {
+      try {
+        const f = await once();
+        if (!best || f.acc < best.acc) best = f;
+        if (f.acc <= MAXA) { hideLocHelp(); return f; }
+        locHelp('weak', t);
+      } catch (e) {
+        if (e && e.code === 1) { denied++; lastErr = 'geo_denied'; locHelp('denied', t); }
+        else { lastErr = e && e.code === 3 ? 'geo_timeout' : 'geo_unavailable'; locHelp('weak', t); }
+      }
+      if (t < TRIES) await sleep(denied ? 3000 : 2500);
+    }
+    if (best) return best;
+    throw new Error(lastErr);
+  })();
+}
+function locEl() { return document.getElementById('geo-msg') || (() => { const d = document.createElement('div'); d.id = 'geo-msg'; d.className = 'text-center text-sm font-bold mt-3 rounded-2xl p-3 leading-7'; submitBtn.parentNode.appendChild(d); return d; })(); }
+function hideLocHelp() { const e = document.getElementById('geo-msg'); if (e) e.remove(); }
+function locHelp(kind, t) {
+  const el = locEl();
+  el.style.cssText = 'background:#fff7e0;color:#7a5a10';
+  if (kind === 'denied') el.textContent = 'لازم تسمح للموقع عشان نتأكد إنك في الكلية. لو ظهرلك سؤال دوس على «سماح». لو مظهرش، دوس على القفل جنب رابط الصفحة، اختار الأذونات ثم الموقع ثم سماح. بنحاول تاني (' + t + ')...';
+  else el.textContent = 'دقة الموقع لسه مش كويسة. اتأكد إن الـGPS شغال واختار «الموقع الدقيق»، ولو ظهرلك سؤال دوس «سماح». بنحاول تاني (' + t + ')...';
+  submitText.textContent = 'جاري تحسين دقة الموقع...';
 }
 function showGeoMsg(kind, res) {
   const el = document.getElementById('geo-msg') || (() => { const d = document.createElement('div'); d.id = 'geo-msg'; d.className = 'text-center text-sm font-bold mt-3 rounded-2xl p-3'; submitBtn.parentNode.appendChild(d); return d; })();
@@ -477,6 +501,7 @@ $('attendance-form').addEventListener('submit', async e => {
     const fix = await getFix();
     submitText.textContent = 'جاري حفظ الحضور...';
     const res = await submitWithRetry({ action: 'addRecord', sessionId: s.id, rosterIdx: pickedIdx, studentName: name, deviceId: getDeviceId(), lat: fix.lat, lng: fix.lng, acc: fix.acc, ...(tokenParam ? { token: tokenParam } : {}) });
+    hideLocHelp();
     const outside = !!(res && res.status === 'out');
     saveReg(s.id, { studentName: name, rosterIdx: pickedIdx, timestamp: new Date().toISOString(), outside, dist: res && res.dist });
     showToast(outside ? 'تم تسجيل حضورك، بس انت برا الكلية' : 'تم تسجيل حضورك بنجاح', outside ? 'info' : undefined);
@@ -484,11 +509,12 @@ $('attendance-form').addEventListener('submit', async e => {
   } catch (err) {
     const m = { duplicate: 'الاسم ده اتسجل قبل كدا!', closed: 'التسجيل مغلق لهذه المحاضرة.', invalid_name: 'الكشف اتحدّث، اختار اسمك تاني.',
       device_used: 'تم التسجيل من هذا الجهاز مسبقاً لهذه المحاضرة.',
-      no_location: 'مقدرناش نحدد موقعك. فعّل الـGPS وحاول تاني.', low_accuracy: 'دقة الموقع ضعيفة. اطلع مكان مفتوح أو فعّل الموقع الدقيق وحاول تاني.',
-      geo_denied: 'لازم تسمح للموقع عشان نتأكد إنك في الكلية. اسمح وحاول تاني.', geo_unavailable: 'مقدرناش نحدد موقعك. فعّل الـGPS وحاول تاني.', geo_timeout: 'تحديد الموقع أخد وقت. حاول تاني.',
+      no_location: 'مقدرناش نحدد موقعك. فعّل الـGPS وحاول تاني.', low_accuracy: 'دقة الموقع لسه ضعيفة بعد كذا محاولة. فعّل «الموقع الدقيق» وشغّل الـGPS، قرّب من شباك أو اطلع مكان مفتوح ثواني، وبعدين دوس تسجيل تاني. ومش هيتسجل إنك برا بسبب ضعف الدقة.',
+      geo_denied: 'الموقع لسه مش مسموح. دوس على القفل جنب رابط الصفحة، الأذونات، الموقع، سماح، وبعدين دوس تسجيل تاني.', geo_unavailable: 'مقدرناش نحدد موقعك. فعّل الـGPS وحاول تاني.', geo_timeout: 'تحديد الموقع أخد وقت. حاول تاني.',
       token_used: 'الرابط ده اتستخدم قبل كده.', invalid_token: 'الرابط غير صحيح، اطلب رابط جديد من البوت.', token_required: 'التسجيل من بوت التليجرام فقط.' };
     if (err.message === 'closed') { activeStudentSession = { ...s, isOpen: false }; renderStudentView(); }
     if (err.message === 'duplicate' || err.message === 'invalid_name') loadRoster().catch(() => {});
+    hideLocHelp();
     showToast(m[err.message] || 'حدث خطأ أثناء التسجيل، حاول مرة أخرى.', 'error');
   } finally {
     submitBtn.disabled = false; submitText.textContent = 'تأكيد وتسجيل الحضور';

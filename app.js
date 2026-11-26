@@ -621,6 +621,7 @@ function renderRoster() {
   $('roster-session-sub').textContent = [dr(cur.doctor), cur.sessionDate].filter(Boolean).join('  —  ');
   const all = buildRows(), present = all.filter(x => x.rec).length, total = all.length, outN = all.filter(x => x.out).length;
   const pct = total ? Math.round(present / total * 100) : 0;
+  document.querySelectorAll('.ex-cat').forEach(e => e.textContent = ' · ' + CAT[adminFilter]);
   $('st-present').textContent = present; $('st-absent').textContent = total - present - outN; $('st-out').textContent = outN; $('st-total').textContent = total;
   $('st-bar').style.width = pct + '%'; $('st-pct').textContent = pct + '%';
   const q = $('admin-search-input').value;
@@ -866,20 +867,22 @@ $('admin-search-input').addEventListener('input', renderRoster);
 
 // ===== التصدير =====
 const safeFile = s => String(s).replace(/\s+/g, '_').replace(/[\/\\:*?"<>|]/g, '-');
-const exportRows = () => buildRows().map(x => [x.no, x.name, x.rec ? 'حاضر (من الكلية)' : x.out ? 'من برا' : 'ما سجلش', x.rec ? fmtTime(x.rec.timestamp) : '']);
+const CAT = { all: 'الكل', present: 'من الكلية', out: 'برا', absent: 'ما سجلش' };
+const exFilter = x => adminFilter === 'all' || (adminFilter === 'present' && !!x.rec) || (adminFilter === 'out' && !!x.out) || (adminFilter === 'absent' && !x.rec && !x.out);
+const exportRows = () => buildRows().filter(exFilter).map(x => { const r = x.rec || x.out; return [x.no, x.name, x.rec ? 'حاضر (من الكلية)' : x.out ? 'من برا' : 'ما سجلش', r ? fmtTime(r.timestamp) : '', r && r.dist != null ? r.dist : '', r && r.fixed ? 'مصحّح' : '']; });
 
 $('export-excel-btn').addEventListener('click', () => {
   const cur = findSession(selectedAdminSessionId); if (!cur) return;
   if (!window.XLSX) { showToast('مكتبة Excel لم تُحمّل، تأكد من الإنترنت', 'error'); return; }
   const ws = XLSX.utils.aoa_to_sheet([
-    ['المادة', cur.courseName], ['الدكتور', dr(cur.doctor)], ['التاريخ', cur.sessionDate], [],
-    ['م', 'اسم الطالب', 'الحالة', 'وقت التسجيل'], ...exportRows()
+    ['المادة', cur.courseName], ['الدكتور', dr(cur.doctor)], ['التاريخ', cur.sessionDate], ['القائمة', CAT[adminFilter]], [],
+    ['م', 'اسم الطالب', 'الحالة', 'وقت التسجيل', 'المسافة (م)', 'تصحيح'], ...exportRows()
   ]);
-  ws['!cols'] = [{ wch: 10 }, { wch: 44 }, { wch: 10 }, { wch: 14 }];
+  ws['!cols'] = [{ wch: 8 }, { wch: 44 }, { wch: 18 }, { wch: 14 }, { wch: 12 }, { wch: 10 }];
   const wb = XLSX.utils.book_new();
   wb.Workbook = { Views: [{ RTL: true }] };
   XLSX.utils.book_append_sheet(wb, ws, 'الحضور');
-  const name = `حضور_${safeFile(cur.courseName)}_${safeFile(cur.sessionDate)}.xlsx`;
+  const name = `حضور_${safeFile(cur.courseName)}_${safeFile(cur.sessionDate)}_${safeFile(CAT[adminFilter])}.xlsx`;
   XLSX.writeFile(wb, name);
   showToast(`تم تنزيل الملف: ${name}`);
 });
@@ -889,12 +892,12 @@ $('export-pdf-btn').addEventListener('click', () => {
   const w = window.open('', '_blank');
   if (!w) { showToast('المتصفح منع النافذة، اسمح بالنوافذ المنبثقة', 'error'); return; }
   const all = buildRows(), present = all.filter(x => x.rec).length;
-  const rows = all.map(x => `<tr class="${x.rec ? '' : 'a'}"><td>${x.no}</td><td class="n">${esc(x.name)}</td><td>${x.rec ? '✓' : ''}</td><td>${x.rec ? fmtTime(x.rec.timestamp) : ''}</td></tr>`).join('');
+  const rows = all.filter(exFilter).map(x => `<tr class="${x.rec ? '' : 'a'}"><td>${x.no}</td><td class="n">${esc(x.name)}</td><td>${x.rec ? '✓' : x.out ? 'برا' : ''}</td><td>${(x.rec || x.out) ? fmtTime((x.rec || x.out).timestamp) : ''}</td></tr>`).join('');
   w.document.write(`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>${esc(cur.courseName)} ${esc(cur.sessionDate)}</title>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
   <style>body{font-family:'Cairo',sans-serif;padding:24px;color:#0b1b2e}h1{font-family:'Amiri',serif;font-size:24px;margin:0 0 4px;border-bottom:2px solid #c9a45c;padding-bottom:8px}h2{font-size:14px;margin:6px 0 0;color:#a98542}p{margin:8px 0 14px;color:#475569;font-size:12px}
   table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #d9cfb6;padding:5px 8px;text-align:center}th{background:#0b1b2e;color:#e2c88f}td.n{text-align:right}tr.a td{color:#94a3b8}tr{page-break-inside:avoid}</style></head><body>
-  <h1>كشف حضور: ${esc(cur.courseName)}</h1>${cur.doctor ? `<h2>${esc(dr(cur.doctor))}</h2>` : ''}<p>${esc(cur.sessionDate)} | حاضر: ${present} | غائب: ${all.length - present} | الإجمالي: ${all.length}</p>
+  <h1>كشف حضور: ${esc(cur.courseName)} · ${CAT[adminFilter]}</h1>${cur.doctor ? `<h2>${esc(dr(cur.doctor))}</h2>` : ''}<p>${esc(cur.sessionDate)} | حاضر: ${present} | غائب: ${all.length - present} | الإجمالي: ${all.length}</p>
   <table><thead><tr><th style="width:40px">م</th><th>اسم الطالب</th><th style="width:50px">حضور</th><th style="width:90px">الوقت</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
   w.document.close();
   setTimeout(() => { try { w.focus(); w.print(); } catch {} }, 900);

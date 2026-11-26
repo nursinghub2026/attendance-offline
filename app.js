@@ -369,9 +369,12 @@ function renderStudentView() {
     if (!oc) { oc = document.createElement('div'); oc.id = 'student-outside-card'; receipt.parentNode.insertBefore(oc, receipt.nextSibling); }
     oc.className = 'fade-in';
     oc.innerHTML = '<div class="ticket shadow-[0_20px_60px_-15px_rgba(7,18,31,.3)] overflow-hidden"><div class="goldbar"></div><div class="p-7 text-center">'
-      + '<svg viewBox="0 0 72 72" class="w-24 h-24 mx-auto mb-3" fill="none"><circle cx="36" cy="36" r="30" stroke="#b42318" stroke-width="2.5"/><path d="M36 20c-7 0-12 5-12 12 0 9 12 20 12 20s12-11 12-20c0-7-5-12-12-12z" stroke="#b42318" stroke-width="3.5" stroke-linejoin="round"/><circle cx="36" cy="32" r="4.5" stroke="#b42318" stroke-width="3.5"/></svg>'
+      + '<svg viewBox="0 0 72 72" class="w-24 h-24 mx-auto mb-3" fill="none"><circle cx="36" cy="36" r="30" stroke="#b42318" stroke-width="2.5"/><path d="M26 26l20 20M46 26L26 46" stroke="#b42318" stroke-width="4.5" stroke-linecap="round"/></svg>'
       + '<h2 class="font-display text-3xl font-bold" style="color:#9b1c1c">انت برا الكلية دلوقتي</h2>'
-      + '<p class="text-sm text-slate-600 mt-3 leading-7">موقعك الحالي بعيد عن الكلية' + (saved.dist ? ' (حوالي ' + saved.dist + ' متر)' : '') + '. لو انت جوه الكلية فعلا كلّم المسؤول.</p></div></div>';
+      + '<p class="text-sm text-slate-600 mt-3 leading-7">موقعك الحالي بعيد عن الكلية' + (saved.dist ? ' (حوالي ' + saved.dist + ' متر)' : '') + '. لو انت جوه الكلية فعلا كلّم المسؤول.</p>'
+      + '<p class="text-xs text-slate-500 mt-2">لما توصل الكلية دوس الزرار ده وسجّل تاني، وحالتك هتتصحح لوحدها.</p>'
+      + '<button id="out-retry" type="button" class="btn-gold w-full mt-4">أنا في الكلية، سجّل تاني</button></div></div>';
+    oc.querySelector('#out-retry').onclick = () => { try { localStorage.removeItem(lockKey(s.id)); } catch {} pickedIdx = Number.isInteger(saved.rosterIdx) ? saved.rosterIdx : null; renderStudentView(); renderNameList(); if (pickedIdx !== null) { const pl = $('picked-label'); pl.textContent = `اخترت: ${rosterNames[pickedIdx]}`; pl.classList.remove('hidden'); } };
     oc.classList.remove('hidden'); return;
   }
   { const oc = document.getElementById('student-outside-card'); if (oc) oc.classList.add('hidden'); }
@@ -532,7 +535,7 @@ $('attendance-form').addEventListener('submit', async e => {
 // لو الأدمن حذف تسجيل الطالب، نمسح القفل من موبايله ونرجّعله القائمة
 function verifyRegistration(j) {
   const s = activeStudentSession, saved = s && getSaved(s.id);
-  if (!saved || !j) return;
+  if (!saved || !j || saved.outside) return;
   const names = j.names || [];
   if (!names.length) return;
   const taken = new Set(j.taken || []);

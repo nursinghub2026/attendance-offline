@@ -372,6 +372,7 @@ function renderStudentView() {
     $('receipt-doctor-row').classList.toggle('hidden', !s.doctor);
     $('receipt-date').textContent = s.sessionDate;
     $('receipt-time').textContent = fmtTime(saved.timestamp);
+    { let n = document.getElementById('receipt-out-note'); if (!n) { n = document.createElement('div'); n.id = 'receipt-out-note'; n.className = 'text-center text-sm font-bold rounded-2xl p-3 mt-4'; n.style.cssText = 'background:#fdecec;color:#9b1c1c'; $('receipt-time').closest('.space-y-3,div').parentNode.appendChild(n); } n.textContent = 'تم تسجيل حضورك، بس انت برا الكلية' + (saved.dist ? ' (حوالي ' + saved.dist + ' متر)' : '') + '. المسؤول هيشوف حالتك.'; n.classList.toggle('hidden', !saved.outside); }
     receipt.classList.remove('hidden'); return;
   }
   if (s.isOpen === false) {
@@ -476,13 +477,9 @@ $('attendance-form').addEventListener('submit', async e => {
     const fix = await getFix();
     submitText.textContent = 'جاري حفظ الحضور...';
     const res = await submitWithRetry({ action: 'addRecord', sessionId: s.id, rosterIdx: pickedIdx, studentName: name, deviceId: getDeviceId(), lat: fix.lat, lng: fix.lng, acc: fix.acc, ...(tokenParam ? { token: tokenParam } : {}) });
-    if (res && res.status === 'out') {
-      showGeoMsg('out', res);
-      showToast('موقعك بعيد عن الكلية، اتأكد إنك جوه الكلية وحاول تاني', 'error');
-      return;
-    }
-    saveReg(s.id, { studentName: name, rosterIdx: pickedIdx, timestamp: new Date().toISOString() });
-    showToast('تم تسجيل حضورك بنجاح');
+    const outside = !!(res && res.status === 'out');
+    saveReg(s.id, { studentName: name, rosterIdx: pickedIdx, timestamp: new Date().toISOString(), outside, dist: res && res.dist });
+    showToast(outside ? 'تم تسجيل حضورك، بس انت برا الكلية' : 'تم تسجيل حضورك بنجاح', outside ? 'info' : undefined);
     renderStudentView();
   } catch (err) {
     const m = { duplicate: 'الاسم ده اتسجل قبل كدا!', closed: 'التسجيل مغلق لهذه المحاضرة.', invalid_name: 'الكشف اتحدّث، اختار اسمك تاني.',
